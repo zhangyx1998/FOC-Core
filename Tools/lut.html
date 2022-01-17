@@ -1,0 +1,15 @@
+<canvas id="surface" onClick="draw(prompt('String').split(/\,\s/g).map(el => parseInt(el)))"></canvas>
+<script>
+    function draw(arr) {
+        let canvas = document.getElementById("surface"),
+            context = canvas.getContext("2d"),
+            frag = canvas.clientWidth / arr.length;
+        canvas.height = 1024;
+        canvas.width = 1024;
+        context.moveTo(0, 0);
+        arr.forEach((y, x) => {
+            context.lineTo(x * frag, y);
+        })
+        context.stroke();
+    }
+</script>

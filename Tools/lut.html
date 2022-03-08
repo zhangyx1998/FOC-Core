@@ -1,15 +1,52 @@
-<canvas id="surface" onClick="draw(prompt('String').split(/\,\s/g).map(el => parseInt(el)))"></canvas>
-<script>
-    function draw(arr) {
-        let canvas = document.getElementById("surface"),
-            context = canvas.getContext("2d"),
-            frag = canvas.clientWidth / arr.length;
-        canvas.height = 1024;
-        canvas.width = 1024;
-        context.moveTo(0, 0);
-        arr.forEach((y, x) => {
-            context.lineTo(x * frag, y);
-        })
-        context.stroke();
-    }
-</script>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            background-color: gray;
+            overflow: hidden;
+        }
+
+        #canvas {
+            position: fixed;
+            left: 10vw;
+            top: calc(50vh - 22.5vw);
+            width: 80vw;
+            height: 45vw;
+            background-color: white;
+        }
+    </style>
+    <script src="./lut.js"></script>
+</head>
+
+<body>
+    <canvas id="canvas" onClick="draw((prompt('String') || '').split(/\,\s*/g).map(el => parseInt(el)))"></canvas>
+    <script>
+        function draw(arr) {
+            let canvas = document.getElementById("canvas"),
+                context = canvas.getContext("2d"),
+            // Get current size of the canvas
+                el = canvas.getBoundingClientRect();
+            // Increase the actual size of our canvas
+            canvas.width = el.width * devicePixelRatio;
+            canvas.height = el.height * devicePixelRatio;
+            // Ensure all drawing operations are scaled
+            context.scale(devicePixelRatio, devicePixelRatio);
+            // Calculate offset compensations
+            let frag = canvas.clientWidth / arr.length,
+                vCenter = canvas.clientHeight / 2;
+            // Draw the content
+            context.moveTo(0, vCenter - arr[0]);
+            arr.forEach((y, x) => {
+                if (x) context.lineTo(x * frag, vCenter - y);
+            })
+            context.stroke();
+        }
+        draw(LUT());
+    </script>
+</body>
+
+</html>
